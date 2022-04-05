@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "module": "commonjs",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "declaration": true,
     "strict": true,
@@ -19,6 +19,7 @@
     "experimentalDecorators": true,
     "sourceMap": true,
     "outDir": "./dist/tsc/",
+    "allowJs": true,
     "types": [
       "node",
       "jest"
