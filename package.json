@@ -1,5 +1,5 @@
 {
-  "name": "organizer",
+  "name": "organizer/cli",
   "main": "./dist/tsc/main.js",
   "types": "./dist/tsc/main.d.ts",
   "browser": "./dist/esbuild/browser.js",
@@ -10,7 +10,7 @@
     "build and run": "npm run-script build && node dist/tsc/app.js",
     "run": "node dist/tsc/app.js",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
-    "test": "jest",
+    "test": "jest --maxWorkers=1",
     "ts-node": "ts-node",
     "docs": "typedoc --entryPoints src/main.ts",
     "build": "tsc -p tsconfig.json",
@@ -31,6 +31,10 @@
     "typescript": "^4.6.3"
   },
   "dependencies": {
-    "lodash-es": "^4.17.21"
+    "@types/prompt": "^1.1.2",
+    "@types/rx": "^4.1.2",
+    "lodash-es": "^4.17.21",
+    "prompt": "^1.2.2",
+    "rxjs": "^7.5.5"
   }
 }

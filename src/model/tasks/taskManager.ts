@@ -7,11 +7,11 @@ export class TaskManager {
     this.taskList = tasks !== undefined ? [...tasks] : [];
   }
 
-  addTask(task: Task) {
+  addTask(task: Task): void {
     this.taskList = [...this.taskList, task];
   }
 
-  removeTask(taskId: string) {
+  removeTask(taskId: string): void {
     this.taskList = this.taskList.filter(task => task.id !== taskId);
   }
 }
