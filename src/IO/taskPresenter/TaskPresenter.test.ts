@@ -1,7 +1,7 @@
 import {BehaviorSubject, Observable, of, Subject} from "rxjs";
 import {TaskPresenter} from "./TaskPresenter";
 import {Task} from "../../model/tasks/task";
-import * as _prompt from "prompt";
+import {TaskData} from "./TaskPresenter";
 
 describe('TaskPresenter', () => {
   const tasks = [
@@ -43,7 +43,6 @@ describe('TaskPresenter', () => {
       presenter.displayTasks();
 
       expect(consoleLogSpy).toBeCalledWith('Task List:');
-      expect(consoleTableSpy).toBeCalledWith([]);
     });
 
     it('should output all tasks in the tabular form to console', () => {
@@ -53,7 +52,9 @@ describe('TaskPresenter', () => {
       presenter.displayTasks();
 
       expect(consoleLogSpy).toBeCalledWith('Task List:');
-      expect(consoleTableSpy).toBeCalledWith(tasks);
+      expect(consoleTableSpy).toBeCalledTimes(tasks.length);
+      expect(consoleTableSpy).toBeCalledWith(tasks[0]);
+      expect(consoleTableSpy).toBeCalledWith(tasks[1]);
     });
 
     afterEach(() => {
@@ -64,22 +65,18 @@ describe('TaskPresenter', () => {
   describe('addTask method', () => {
     it('should push to the "taskAdded" observable', done => {
       const presenter = new TaskPresenter(of([]));
-      const newTask = new Task('title', 'description', 2);
+
+      const taskData: TaskData = {title: 'title', description: 'description', estimate: 1};
+
+      // mocking function which handles console input
+      presenter.getTaskDataFromConsole =  async () => taskData;
 
       presenter.taskAdded$.subscribe(task => {
-        expect(task.title).toEqual(newTask.title);
-        expect(task.description).toEqual(newTask.description);
-        expect(task.estimate).toEqual(newTask.estimate);
+        expect(task.title).toEqual(taskData.title);
+        expect(task.description).toEqual(taskData.description);
+        expect(task.estimate).toEqual(taskData.estimate);
         done();
       });
-
-      const prompt = _prompt as any;
-
-      const promptFunctionMock = (_: any, callback: (err: Error | null, result: any) => void) => {
-        callback(null, {...newTask})
-      }
-
-      prompt.get = jest.fn(promptFunctionMock);
 
       presenter.addTask();
     });

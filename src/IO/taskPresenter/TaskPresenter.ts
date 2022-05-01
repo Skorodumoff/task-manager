@@ -2,6 +2,12 @@ import {Observable, Subject} from "rxjs";
 import {Task} from "../../model/tasks/task";
 import * as _prompt from "prompt";
 
+export interface TaskData {
+  title: string;
+  description: string;
+  estimate: number;
+}
+
 export class TaskPresenter {
   tasks$: Observable<Task[]>;
   tasks: Task[] = [];
@@ -13,28 +19,28 @@ export class TaskPresenter {
   }
 
   displayTasks(): void {
+    console.log();
+
     console.log('Task List:');
-    console.table(this.tasks);
+    this.tasks.forEach(task => console.table(task));
   }
 
-  addTask(): void {
+  async addTask() {
+    const {title, description, estimate}: TaskData = await this.getTaskDataFromConsole();
+    const task = new Task(title, description, estimate);
+    this.taskAdded$.next(task);
+  }
+
+  async getTaskDataFromConsole(): Promise<TaskData> {
     const prompt = _prompt as any;
-
     prompt.start();
-    prompt.get(['title', 'description', 'estimate'],  (err: Error, result: any) => {
-      if (err) {
-        return console.log(err);
-      }
 
-      console.log('Data received');
-
-      const {title, description, estimate}: {title: string; description: string; estimate: number} = result;
-      const task = new Task(title, description, estimate);
-      this.taskAdded$.next(task);
-    });
+    const {title, description, estimate} = await prompt.get(['title', 'description', 'estimate']);
+    return {title, description, estimate: parseInt((estimate))}
   }
 
   // removeTask(): Observable<string> {
   //
   // }
 }
+
